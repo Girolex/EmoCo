@@ -1,0 +1,119 @@
+/* Page layout */
+body {
+    background-color: #1e1e2e;
+    color: #f1f1f1;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Chat container */
+.chat-container {
+    width: 400px;
+    background: #2a2a3d;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Chat box */
+.chat-box {
+    height: 350px;
+    overflow-y: auto;
+    background: #3a3a4f;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* Messages */
+.user-msg, .bot-msg {
+    margin: 8px 0;
+    word-wrap: break-word;
+}
+
+.user-msg {
+    text-align: right;
+    color: #79c0ff;
+}
+
+.bot-msg {
+    text-align: left;
+    color: #ffa657;
+}
+
+/* Input area */
+#chat-form {
+    display: flex;
+    gap: 10px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+}
+
+button {
+    padding: 8px 12px;
+    background: #79c0ff;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #58a6ff;
+}
+
+/* Typing animation */
+.typing .dots::after {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    text-align: left;
+    animation: dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: "";
+    }
+    40% {
+        content: ".";
+    }
+    60% {
+        content: "..";
+    }
+    80%, 100% {
+        content: "...";
+    }
+}
+
+/* Fade-in effect for new messages */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
