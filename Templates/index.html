@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>EmoCo Chat</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <div class="chat-container">
-        <h2>EmoCo Prototype</h2>
+        <h2>EmoCo</h2>
 
         <div id="chat-box" class="chat-box"></div>
 
@@ -18,26 +20,67 @@
     </div>
 
     <script>
+        // Cache DOM elements
         const form = document.getElementById("chat-form");
         const input = document.getElementById("user-input");
         const chatBox = document.getElementById("chat-box");
 
+        // Display initial welcome message
+        window.addEventListener("DOMContentLoaded", () => {
+            const welcomeDiv = document.createElement("div");
+            welcomeDiv.classList.add("bot-msg");
+            welcomeDiv.innerHTML = `
+    <b>EmoCo:</b> Hello! I'm <b>EmoCo</b> — your music production assistant. 
+    I’m here to help you with songwriting, arranging, mixing concepts, and music theory guidance 
+    across various skill levels. 
+    <br><br>
+    Type a message below to start exploring your sound!
+`;
+            chatBox.appendChild(welcomeDiv);
+            updateShadow();
+        });
+
+        // Toggles top/bottom shadows based on scroll position
+        function updateShadow() {
+            const canScroll = chatBox.scrollHeight > chatBox.clientHeight;
+            const atTop = chatBox.scrollTop <= 0;
+            const atBottom = chatBox.scrollTop + chatBox.clientHeight >= chatBox.scrollHeight - 1;
+
+            if (canScroll && !atTop) {
+                chatBox.classList.add("scrollable-top");
+            } else {
+                chatBox.classList.remove("scrollable-top");
+            }
+
+            if (canScroll && !atBottom) {
+                chatBox.classList.add("scrollable-bottom");
+            } else {
+                chatBox.classList.remove("scrollable-bottom");
+            }
+        }
+
+        // Recalculate shadow on scroll
+        chatBox.addEventListener("scroll", updateShadow);
+        // Watch for new chat content to keep shadow in sync
+        new MutationObserver(updateShadow).observe(chatBox, { childList: true, subtree: true });
+
+        // Handle message submission and display bot response
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
+            // Clear chat display for new exchange
+            chatBox.innerHTML = "";
             const message = input.value.trim();
             if (!message) return;
 
-            // Show user message
-            chatBox.innerHTML += `<div class="user-msg"><b>You:</b> ${message}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
+            // Render user message
+            chatBox.innerHTML += `<div class="user-msg">${message}</div>`;
             input.value = "";
 
-            // Typing indicator
+            // Create typing indicator while waiting for response
             const typingDiv = document.createElement("div");
             typingDiv.classList.add("bot-msg", "typing");
             typingDiv.innerHTML = `<b>EmoCo:</b> <span class="dots"></span>`;
             chatBox.appendChild(typingDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
 
             // Send message to backend
             const response = await fetch("/", {
@@ -48,11 +91,30 @@
 
             const data = await response.json();
 
-            // Remove typing indicator and show real message
+            // Replace typing indicator with bot response
             typingDiv.remove();
-            chatBox.innerHTML += `<div class="bot-msg fade-in"><b>EmoCo:</b> ${data.response}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const botDiv = document.createElement("div");
+            botDiv.classList.add("bot-msg");
+
+            // Split by line breaks (or Markdown <br> equivalents)
+            const lines = data.response.split(/\n|<br\s*\/?>/).filter(line => line.trim() !== "");
+
+            // Create a fade-in span for each line with progressive delay
+            lines.forEach((line, index) => {
+                const span = document.createElement("span");
+                span.classList.add("fade-in-line");
+                span.style.display = "block";
+                span.style.animationDelay = `${index * 0.25}s`;  // 0.25s stagger per line
+                span.innerHTML = line.trim();
+                botDiv.appendChild(span);
+            });
+
+            chatBox.appendChild(botDiv);
+            chatBox.scrollTop = 0;
+            updateShadow();
         });
     </script>
 </body>
+
 </html>

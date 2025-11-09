@@ -1,3 +1,17 @@
+@font-face {
+    font-family: 'Limelight';
+    src: url('fonts/Limelight/Limelight-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Diplomata';
+    src: url('fonts/Diplomata/Diplomata-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* Page layout */
 body {
     background-color: #1e1e2e;
@@ -9,6 +23,7 @@ body {
     height: 100vh;
     margin: 0;
 }
+
 
 /* Chat container */
 .chat-container {
@@ -25,7 +40,11 @@ body {
 /* Title */
 h2 {
     text-align: center;
-    margin-bottom: 10px;
+    margin: 0;
+    margin-bottom: 20px;
+    font-family: 'Limelight', sans-serif;
+    font-size: 1.8em;
+    font-style: italic;
 }
 
 /* Chat box */
@@ -33,13 +52,45 @@ h2 {
     height: 350px;
     overflow-y: auto;
     background: #3a3a4f;
-    padding: 10px;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    box-shadow:
+        inset 0 10px 15px -10px rgba(0, 0, 0, 0),
+        inset 0 -10px 15px -10px rgba(0, 0, 0, 0);
+    transition: box-shadow 1s ease-in-out;
+}
+
+.chat-box::-webkit-scrollbar {
+    display: none;
+}
+
+.chat-box.scrollable-top {
+    box-shadow:
+        inset 0 10px 15px -10px rgba(0, 0, 0, 0.7),
+        inset 0 -10px 15px -10px rgba(0, 0, 0, 0);
+}
+
+.chat-box.scrollable-bottom {
+    box-shadow:
+        inset 0 10px 15px -10px rgba(0, 0, 0, 0),
+        inset 0 -10px 15px -10px rgba(0, 0, 0, 0.7);
+}
+
+.chat-box.scrollable-top.scrollable-bottom {
+    box-shadow:
+        inset 0 10px 15px -10px rgba(0, 0, 0, 0.7),
+        inset 0 -10px 15px -10px rgba(0, 0, 0, 0.7);
 }
 
 /* Messages */
-.user-msg, .bot-msg {
+.user-msg,
+.bot-msg {
     margin: 8px 0;
     word-wrap: break-word;
 }
@@ -52,6 +103,85 @@ h2 {
 .bot-msg {
     text-align: left;
     color: #ffa657;
+}
+
+/* Enhanced markdown support */
+.bot-msg {
+    line-height: 1.5;
+    white-space: normal;
+}
+
+/* Base text elements */
+.bot-msg p,
+.bot-msg strong,
+.bot-msg em {
+    color: inherit;
+    margin: 0.4em 0;
+    font-size: 0.95em;
+}
+
+/* Lists */
+.bot-msg ul,
+.bot-msg ol {
+    padding-left: 1.4em;
+    margin: 0.4em 0;
+}
+
+.bot-msg li {
+    margin: 0.25em 0;
+}
+
+/* Code formatting */
+.bot-msg pre,
+.bot-msg code {
+    background: #2d2d3d;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.bot-msg pre {
+    padding: 6px 8px;
+    overflow-x: auto;
+}
+
+.bot-msg code {
+    padding: 2px 4px;
+}
+
+/* Headings */
+.bot-msg h1,
+.bot-msg h2,
+.bot-msg h3 {
+    color: #f1f1f1;
+    margin: 0.6em 0 0.3em;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Horizontal rule & quotes */
+.bot-msg hr {
+    border: none;
+    border-top: 1px solid #555;
+    margin: 0.8em 0;
+}
+
+.bot-msg blockquote {
+    border-left: 3px solid #555;
+    margin: 0.5em 0;
+    padding-left: 0.8em;
+    color: #d0d0d0;
+    font-style: italic;
+}
+
+/* Links */
+.bot-msg a {
+    color: #79c0ff;
+    text-decoration: underline;
+}
+
+.bot-msg a:hover {
+    text-decoration: none;
 }
 
 /* Input area */
@@ -68,14 +198,20 @@ h2 {
     outline: none;
 }
 
+#user-input::placeholder {
+    font-style: italic;
+    color: #aaa;
+}
+
 button {
     padding: 8px 12px;
     background: #79c0ff;
-    color: #000;
+    color: #fff;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    font-family: 'Limelight', sans-serif;
 }
 
 button:hover {
@@ -83,36 +219,47 @@ button:hover {
 }
 
 /* Typing animation */
+.typing .dots {
+    display: inline-block;
+    width: 1.5em;
+    /* Enough space for "..." */
+    text-align: left;
+}
+
 .typing .dots::after {
     content: "";
     display: inline-block;
-    width: 10px;
-    text-align: left;
     animation: dots 1.2s steps(4, end) infinite;
 }
 
 @keyframes dots {
-    0%, 20% {
+
+    0%,
+    20% {
         content: "";
     }
+
     40% {
         content: ".";
     }
+
     60% {
         content: "..";
     }
-    80%, 100% {
+
+    80%,
+    100% {
         content: "...";
     }
 }
 
-/* Fade-in effect for new messages */
-.fade-in {
+/* Generic fade-in for each line */
+.fade-in-line {
     opacity: 0;
-    animation: fadeIn 0.5s ease-in-out forwards;
+    animation: fadeInLine 1.5s ease-in-out forwards;
 }
 
-@keyframes fadeIn {
+@keyframes fadeInLine {
     to {
         opacity: 1;
     }

@@ -1,0 +1,7 @@
+1. had to download flask / flask modules
+2. changed port
+3. sometimes the response ends in a question, not good, since memory isn't retained, it won't have the context for an answer.
+
+----- prompt ideas
+1. What notes, when played together, produce positive feelings in listeners? What about negative feelings?
+2. Compile a playlist of sea shanties throughout history and into the modern day.
