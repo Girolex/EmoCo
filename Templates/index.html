@@ -20,13 +20,17 @@
     </div>
 
     <script>
-        // Cache DOM elements
+        // --- Initialization and DOM element caching ---
         const form = document.getElementById("chat-form");
         const input = document.getElementById("user-input");
         const chatBox = document.getElementById("chat-box");
+        const thinkSound = new Audio("{{ url_for('static', filename='sounds/think.mp3') }}");
+        const answerSound = new Audio("{{ url_for('static', filename='sounds/answer.mp3') }}");
 
-        // Display initial welcome message
-        window.addEventListener("DOMContentLoaded", () => {
+        // --- Helper Functions ---
+
+        // --- Welcome message ---
+        function addWelcomeMessage() {
             const welcomeDiv = document.createElement("div");
             welcomeDiv.classList.add("bot-msg");
             welcomeDiv.innerHTML = `
@@ -38,9 +42,10 @@
 `;
             chatBox.appendChild(welcomeDiv);
             updateShadow();
-        });
+        }
 
-        // Toggles top/bottom shadows based on scroll position
+        // --- Scroll shadow management ---
+        // Adds/removes shadow classes based on scroll position to enhance UI feedback
         function updateShadow() {
             const canScroll = chatBox.scrollHeight > chatBox.clientHeight;
             const atTop = chatBox.scrollTop <= 0;
@@ -59,53 +64,71 @@
             }
         }
 
-        // Recalculate shadow on scroll
-        chatBox.addEventListener("scroll", updateShadow);
-        // Watch for new chat content to keep shadow in sync
-        new MutationObserver(updateShadow).observe(chatBox, { childList: true, subtree: true });
+        // --- Initialization on DOMContentLoaded ---
+        window.addEventListener("DOMContentLoaded", () => {
+            addWelcomeMessage();
 
-        // Handle message submission and display bot response
+            // Update shadow on mutations and scroll
+            new MutationObserver(updateShadow).observe(chatBox, { childList: true, subtree: true });
+            chatBox.addEventListener("scroll", updateShadow);
+        });
+
+        // --- Message submission and response handling ---
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            // Clear chat display for new exchange
-            chatBox.innerHTML = "";
+
+            thinkSound.currentTime = 0;
+            thinkSound.play();
+
             const message = input.value.trim();
             if (!message) return;
 
-            // Render user message
+            // Collect the last two visible messages (user-msg and bot-msg) from chatBox for history
+            const messages = Array.from(chatBox.querySelectorAll(".user-msg, .bot-msg"));
+            const lastTwoMessages = messages.slice(-2).map(el => el.textContent.trim()).join("\n");
+            const history = lastTwoMessages;
+
+            // Clear chat box before displaying new messages to restore animations
+            chatBox.innerHTML = "";
+
+            // Display user message
             chatBox.innerHTML += `<div class="user-msg">${message}</div>`;
             input.value = "";
 
-            // Create typing indicator while waiting for response
+            // Show typing indicator
             const typingDiv = document.createElement("div");
             typingDiv.classList.add("bot-msg", "typing");
             typingDiv.innerHTML = `<b>EmoCo:</b> <span class="dots"></span>`;
             chatBox.appendChild(typingDiv);
 
-            // Send message to backend
+            // Send message and history to backend and await response
+
             const response = await fetch("/", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams({ message })
+                body: new URLSearchParams({ message, history })
             });
 
             const data = await response.json();
 
-            // Replace typing indicator with bot response
+            thinkSound.pause();
+            thinkSound.currentTime = 0;
+            answerSound.currentTime = 0;
+            answerSound.play();
+
+            // Replace typing indicator with bot response, animating lines with fade-in effect
             typingDiv.remove();
 
             const botDiv = document.createElement("div");
             botDiv.classList.add("bot-msg");
 
-            // Split by line breaks (or Markdown <br> equivalents)
             const lines = data.response.split(/\n|<br\s*\/?>/).filter(line => line.trim() !== "");
 
-            // Create a fade-in span for each line with progressive delay
             lines.forEach((line, index) => {
                 const span = document.createElement("span");
                 span.classList.add("fade-in-line");
                 span.style.display = "block";
-                span.style.animationDelay = `${index * 0.25}s`;  // 0.25s stagger per line
+                span.style.animationDelay = `${index * 0.25}s`;
                 span.innerHTML = line.trim();
                 botDiv.appendChild(span);
             });

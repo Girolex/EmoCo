@@ -1,3 +1,4 @@
+/***** 1. Fonts and variables *****/
 @font-face {
     font-family: 'Limelight';
     src: url('fonts/Limelight/Limelight-Regular.ttf') format('truetype');
@@ -12,7 +13,7 @@
     font-style: normal;
 }
 
-/* Page layout */
+/***** 2. Base layout *****/
 body {
     background-color: #1e1e2e;
     color: #f1f1f1;
@@ -24,7 +25,7 @@ body {
     margin: 0;
 }
 
-
+/***** 3. Chat structure *****/
 /* Chat container */
 .chat-container {
     width: 400px;
@@ -44,7 +45,6 @@ h2 {
     margin-bottom: 20px;
     font-family: 'Limelight', sans-serif;
     font-size: 1.8em;
-    font-style: italic;
 }
 
 /* Chat box */
@@ -88,30 +88,29 @@ h2 {
         inset 0 -10px 15px -10px rgba(0, 0, 0, 0.7);
 }
 
-/* Messages */
+/***** 4. Message styling *****/
+/* Common message styles */
 .user-msg,
 .bot-msg {
     margin: 8px 0;
     word-wrap: break-word;
 }
 
+/* User messages */
 .user-msg {
     text-align: right;
     color: #79c0ff;
 }
 
+/* Bot messages with enhanced markdown support */
 .bot-msg {
     text-align: left;
     color: #ffa657;
-}
-
-/* Enhanced markdown support */
-.bot-msg {
     line-height: 1.5;
     white-space: normal;
 }
 
-/* Base text elements */
+/* Base text elements inside bot messages */
 .bot-msg p,
 .bot-msg strong,
 .bot-msg em {
@@ -120,7 +119,7 @@ h2 {
     font-size: 0.95em;
 }
 
-/* Lists */
+/* Lists inside bot messages */
 .bot-msg ul,
 .bot-msg ol {
     padding-left: 1.4em;
@@ -129,9 +128,10 @@ h2 {
 
 .bot-msg li {
     margin: 0.25em 0;
+    margin-left: 15px;
 }
 
-/* Code formatting */
+/* Code formatting inside bot messages */
 .bot-msg pre,
 .bot-msg code {
     background: #2d2d3d;
@@ -149,7 +149,7 @@ h2 {
     padding: 2px 4px;
 }
 
-/* Headings */
+/* Headings inside bot messages */
 .bot-msg h1,
 .bot-msg h2,
 .bot-msg h3 {
@@ -159,7 +159,7 @@ h2 {
     font-size: 1.1em;
 }
 
-/* Horizontal rule & quotes */
+/* Horizontal rule & quotes inside bot messages */
 .bot-msg hr {
     border: none;
     border-top: 1px solid #555;
@@ -174,7 +174,7 @@ h2 {
     font-style: italic;
 }
 
-/* Links */
+/* Links inside bot messages */
 .bot-msg a {
     color: #79c0ff;
     text-decoration: underline;
@@ -184,7 +184,7 @@ h2 {
     text-decoration: none;
 }
 
-/* Input area */
+/***** 5. Input and buttons *****/
 #chat-form {
     display: flex;
     gap: 10px;
@@ -218,6 +218,7 @@ button:hover {
     background: #58a6ff;
 }
 
+/***** 6. Animations *****/
 /* Typing animation */
 .typing .dots {
     display: inline-block;
@@ -229,7 +230,7 @@ button:hover {
 .typing .dots::after {
     content: "";
     display: inline-block;
-    animation: dots 1.2s steps(4, end) infinite;
+    animation: dots 0.6s steps(4, end) infinite;
 }
 
 @keyframes dots {

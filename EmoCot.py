@@ -11,6 +11,7 @@ def home():
         return render_template("index.html")
 
     user_message = request.form["message"]
+    history = request.form.get("history", "")
 
     system_prompt = (
         "You are EmoCo, an AI that ONLY answers questions or requests related to music. "
@@ -21,6 +22,9 @@ def home():
         "You can respond to general courteous things like hello and how are you?"
     )
 
+    # Include conversation history before the current user message
+    combined_prompt = f"{history}\nUser: {user_message}"
+
     try:
         response = requests.post(
             "http://localhost:11434/api/chat",
@@ -28,7 +32,7 @@ def home():
                 "model": "llama3",
                 "messages": [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_message}
+                    {"role": "user", "content": combined_prompt}
                 ]
             },
             stream=True

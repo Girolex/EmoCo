@@ -1,7 +1,19 @@
-1. had to download flask / flask modules
-2. changed port
-3. sometimes the response ends in a question, not good, since memory isn't retained, it won't have the context for an answer.
+----- prompt ideas -----
+** begin with "hi my names _____" + another prompt to show memory retention
 
------ prompt ideas
-1. What notes, when played together, produce positive feelings in listeners? What about negative feelings?
-2. Compile a playlist of sea shanties throughout history and into the modern day.
+// novice level
+- What’s the difference between melody and harmony?
+- What makes some chords sound happy and others sound sad?
+
+// adept level
+- How can you make a rhythm feel like it’s “pushing forward” or “relaxing”?
+- What kind of chord progressions are common in lo-fi tracks?
+
+// professional level
+- Design a full arrangement that evolves emotionally across three sections without changing tempo.
+- Describe a system for mapping emotion to musical parameters (key, register, dynamics) that could guide composition.
+
+
+
+// general
+- Compile a playlist of sea shanties throughout history and through the modern day.
